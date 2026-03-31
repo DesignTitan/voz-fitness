@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>VOZ FITNESS</title>
+<!-- PWA / Add to Home Screen -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="VOZ FITNESS">
+<meta name="theme-color" content="#f4f4f4">
+<meta name="description" content="VOZ FITNESS — Hypertrophy + Recomposition workout plan, meals & grocery list">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj4KICA8cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjAiIGZpbGw9IiMxMTEiLz4KICA8dGV4dCB4PSI5MCIgeT0iODgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxIZWx2ZXRpY2EiIGZvbnQtd2VpZ2h0PSI5MDAiIGZvbnQtc2l6ZT0iNTIiIGZpbGw9IiNmZmYiIGxldHRlci1zcGFjaW5nPSI2Ij5WT1o8L3RleHQ+CiAgPHRleHQgeD0iOTAiIHk9IjEyNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLEhlbHZldGljYSIgZm9udC13ZWlnaHQ9IjQwMCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzg4OCIgbGV0dGVyLXNwYWNpbmc9IjQiPkZJVE5FU1M8L3RleHQ+Cjwvc3ZnPg==">
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiVk9aIEZJVE5FU1MiLCJzaG9ydF9uYW1lIjoiVk9aIiwiZGVzY3JpcHRpb24iOiJIeXBlcnRyb3BoeSArIFJlY29tcG9zaXRpb24iLCJzdGFydF91cmwiOiIvIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiI2Y0ZjRmNCIsInRoZW1lX2NvbG9yIjoiI2Y0ZjRmNCJ9">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f4f4;
+    --surface: #ffffff;
+    --surface-hover: #fafafa;
+    --border: #e0e0e0;
+    --text: #111111;
+    --text-dim: #888888;
+    --accent: #111111;
+    --accent-glow: #11111108;
+    --hiit: #111111;
+    --rest-green: #999999;
+    --rest-glow: #99999908;
+    --tag-bg: #eeeeee;
+    --meal-blue: #111111;
+    --meal-blue-glow: #11111108;
+    --grocery-purple: #111111;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  /* ─── HEADER ─── */
+  .header { padding: 40px 20px 16px; text-align: center; position: relative; }
+  .header::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 60px; height: 2px; background: var(--accent); }
+  .brand { font-family: 'Jost', sans-serif; font-weight: 900; font-size: clamp(32px, 7vw, 48px); letter-spacing: 6px; text-transform: uppercase; color: var(--text); line-height: 1; }
+  .brand span { color: var(--accent); }
+  .phase-tag { display: inline-block; margin-top: 10px; padding: 4px 12px; font-size: 9px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent); border-radius: 100px; }
+
+  /* ─── FLOATING UTILITY BELT (SECTION SWITCHER — BOTTOM) ─── */
+  .utility-belt {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    width: calc(100% - 40px);
+    max-width: 340px;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .utility-belt-inner {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: var(--surface);
+    border-radius: 28px;
+    padding: 5px;
+    box-shadow:
+      0 4px 24px rgba(0,0,0,0.08),
+      0 12px 48px rgba(0,0,0,0.06),
+      0 0 0 1px rgba(0,0,0,0.04);
+    position: relative;
+  }
+
+  /* Sliding blob indicator */
+  .utility-belt-inner::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: calc((100% - 10px) / 3);
+    height: calc(100% - 10px);
+    background: var(--accent);
+    border-radius: 24px;
+    transition: transform .35s cubic-bezier(0.4, 0, 0.2, 1), background .3s, box-shadow .3s;
+    z-index: 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  }
+
+  .utility-belt-inner[data-active="1"]::before {
+    transform: translateX(100%);
+    background: var(--meal-blue);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  }
+
+  .utility-belt-inner[data-active="2"]::before {
+    transform: translateX(200%);
+    background: var(--grocery-purple);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  }
+
+  .belt-btn {
+    flex: 1;
+    padding: 12px 0;
+    border: none;
+    border-radius: 24px;
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: color .25s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    position: relative;
+    z-index: 1;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .belt-btn svg { width: 20px; height: 20px; transition: transform .2s; }
+  .belt-btn .belt-label {
+    font-family: 'Jost', sans-serif; font-weight: 700;
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    transition: opacity .25s;
+  }
+
+  .belt-btn:active svg { transform: scale(0.85); }
+
+  .belt-btn.active { color: #fff; }
+  .belt-btn.active .belt-label { opacity: 1; }
+
+  .belt-btn.active svg path,
+  .belt-btn.active svg circle,
+  .belt-btn.active svg rect,
+  .belt-btn.active svg line { stroke: #fff; }
+
+  /* ─── SECTIONS ─── */
+  .section-view { display: none; }
+  .section-view.active { display: block; }
+
+  /* ─── PROTOCOL / WARMUP ─── */
+  .protocol { margin: 0 16px 8px; padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: background .2s; }
+  .protocol:hover { background: var(--surface-hover); }
+  .protocol-header { display: flex; align-items: center; justify-content: space-between; }
+  .protocol-title { font-family: 'Jost', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
+  .protocol-toggle { font-size: 18px; color: var(--text-dim); transition: transform .3s; }
+  .protocol.open .protocol-toggle { transform: rotate(180deg); }
+  .protocol-body { max-height: 0; overflow: hidden; transition: max-height .4s ease, padding .3s; }
+  .protocol.open .protocol-body { max-height: 500px; padding-top: 12px; }
+  .protocol-item { display: flex; align-items: flex-start; gap: 10px; padding: 4px 0; font-size: 13px; color: var(--text-dim); line-height: 1.55; }
+  .protocol-bullet { flex-shrink: 0; width: 5px; height: 5px; margin-top: 7px; border-radius: 50%; background: var(--accent); }
+
+  .warmup-banner { margin: 0 16px 8px; padding: 12px 18px; background: linear-gradient(135deg, #f0f0f0, #fafafa); border: 1px solid #e0e0e0; border-radius: var(--radius); }
+  .warmup-label { font-family: 'Jost', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+  .warmup-items { display: flex; flex-direction: column; gap: 3px; }
+  .warmup-item { font-size: 12px; color: var(--text-dim); padding-left: 14px; position: relative; }
+  .warmup-item::before { content: ''; position: absolute; left: 0; top: 6px; width: 5px; height: 5px; border-radius: 50%; background: #cccccc; }
+
+  /* ─── INLINE DAY TABS (SIMPLE ROW) ─── */
+  .day-tabs-row {
+    display: flex;
+    gap: 6px;
+    padding: 0 16px 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .day-tabs-row::-webkit-scrollbar { display: none; }
+
+  .day-tab {
+    flex-shrink: 0;
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    background: var(--surface);
+    color: var(--text-dim);
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .2s;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .day-tab:hover { border-color: #cccccc; }
+
+  .day-tab.active {
+    background: var(--text);
+    color: #fff;
+    border-color: var(--text);
+  }
+
+  .day-tab.rest-tab.active {
+    background: var(--rest-green);
+    border-color: var(--rest-green);
+  }
+
+  /* ─── DAY CONTENT ─── */
+  .day-content { display: none; padding: 0 16px 16px; padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)); animation: fadeUp .3s ease; }
+  .day-content.active { display: block; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .day-header { margin-bottom: 16px; }
+  .day-number { font-family: 'Jost', sans-serif; font-weight: 800; font-size: clamp(26px, 5.5vw, 36px); letter-spacing: 2px; text-transform: uppercase; line-height: 1.1; }
+  .day-focus { font-size: 12px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-top: 4px; }
+  .day-focus.rest-focus { color: var(--rest-green); }
+
+  /* ─── EXERCISE CARD ─── */
+  .exercise-card { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 16px; margin-bottom: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); transition: border-color .2s, background .2s; cursor: pointer; -webkit-user-select: none; user-select: none; }
+  @media (min-width: 480px) { .exercise-card { flex-direction: row; align-items: center; } }
+  .exercise-card:hover { border-color: #d5d5d5; background: var(--surface-hover); }
+  .exercise-card:active { transform: scale(0.985); transition: transform .1s; }
+  .exercise-visual { flex-shrink: 0; width: 160px; height: 160px; border-radius: 12px; background: #f0f0f0; border: 1px solid #e0e0e0; overflow: hidden; position: relative; }
+  .exercise-visual .img-pair { display: flex; width: 200%; height: 100%; animation: slideExercise 3s ease-in-out infinite alternate; }
+  .exercise-visual .img-pair img { width: 50%; height: 100%; object-fit: cover; object-position: center top; }
+  @keyframes slideExercise { 0%, 35% { transform: translateX(0); } 65%, 100% { transform: translateX(-50%); } }
+  .exercise-info { flex: 1; min-width: 0; }
+  .exercise-num { font-family: 'Jost', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 2px; color: var(--accent); margin-bottom: 2px; }
+  .exercise-name { font-weight: 600; font-size: 14.5px; line-height: 1.3; margin-bottom: 6px; color: var(--text); }
+  .exercise-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { padding: 3px 10px; font-size: 11px; font-weight: 500; border-radius: 100px; background: var(--tag-bg); color: var(--accent); letter-spacing: 0.3px; }
+  .tag.heavy { background: #f0f0f0; color: var(--hiit); }
+  .exercise-note { margin-top: 8px; font-size: 12px; color: var(--text-dim); font-style: italic; line-height: 1.45; }
+
+  /* ─── HIIT / REST / FULL REST ─── */
+  .hiit-card { padding: 18px; margin: 16px 0 10px; background: linear-gradient(135deg, #f5f5f5, #fafafa); border: 1px solid #d5d5d5; border-radius: var(--radius); }
+  .hiit-label { font-family: 'Jost', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--hiit); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .hiit-label svg { width: 16px; height: 16px; }
+  .hiit-detail { font-size: 13px; color: var(--text); margin-bottom: 5px; line-height: 1.5; }
+  .hiit-detail strong { color: var(--hiit); font-weight: 600; }
+  .hiit-liss { margin-top: 10px; padding-top: 10px; border-top: 1px solid #d5d5d5; font-size: 13px; color: var(--text-dim); }
+  .rest-card { padding: 20px; margin-bottom: 10px; background: linear-gradient(135deg, #f5f5f5, #fafafa); border: 1px solid #d5d5d5; border-radius: var(--radius); }
+  .rest-item { display: flex; align-items: center; gap: 12px; padding: 7px 0; }
+  .rest-icon { width: 36px; height: 36px; border-radius: 10px; background: #eeeeee; display: flex; align-items: center; justify-content: center; }
+  .rest-icon svg { width: 20px; height: 20px; }
+  .rest-text { font-size: 14px; color: var(--text); }
+  .rest-text span { display: block; font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+  .full-rest { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 260px; text-align: center; padding: 40px 20px; }
+  .full-rest-icon { width: 72px; height: 72px; border-radius: 50%; background: var(--rest-glow); border: 1px solid #d5d5d5; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+  .full-rest-icon svg { width: 32px; height: 32px; }
+  .full-rest h3 { font-family: 'Jost', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: 3px; text-transform: uppercase; color: var(--rest-green); margin-bottom: 6px; }
+  .full-rest p { font-size: 14px; color: var(--text-dim); max-width: 260px; }
+  .section-note { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; margin: 10px 0; background: var(--accent-glow); border: 1px solid #e0e0e0; border-radius: var(--radius-sm); font-size: 12px; color: var(--accent); line-height: 1.5; }
+  .section-note svg { flex-shrink: 0; width: 16px; height: 16px; margin-top: 1px; }
+
+  /* ─── EXERCISE MODAL ─── */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; opacity: 0; visibility: hidden; transition: opacity .3s, visibility .3s; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+  .modal-overlay.open { opacity: 1; visibility: visible; }
+  .modal-sheet { position: fixed; bottom: 0; left: 0; right: 0; z-index: 250; background: var(--surface); border-radius: 20px 20px 0 0; transform: translateY(100%); transition: transform .4s cubic-bezier(0.32, 0.72, 0, 1); max-height: 85dvh; overflow-y: auto; overscroll-behavior: contain; padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -10px 40px rgba(0,0,0,0.12); }
+  .modal-sheet.open { transform: translateY(0); }
+  .modal-handle { display: flex; justify-content: center; padding: 12px 0 4px; position: sticky; top: 0; background: var(--surface); z-index: 2; border-radius: 20px 20px 0 0; }
+  .modal-handle::after { content: ''; width: 36px; height: 4px; border-radius: 4px; background: #cccccc; }
+  .modal-images { width: 100%; display: flex; overflow: hidden; background: #f0f0f0; position: relative; }
+  .modal-images .modal-img-pair { display: flex; width: 100%; min-height: 280px; }
+  .modal-images .modal-img-pair img { width: 50%; height: auto; min-height: 280px; object-fit: cover; object-position: center top; }
+  .modal-img-label { position: absolute; bottom: 12px; padding: 4px 12px; font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: #fff; background: rgba(0,0,0,0.5); border-radius: 100px; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+  .modal-img-label.start { left: 12px; }
+  .modal-img-label.end { right: 12px; }
+  .modal-body { padding: 18px 20px 20px; }
+  .modal-exercise-num { font-family: 'Jost', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 2px; color: var(--accent); margin-bottom: 4px; }
+  .modal-exercise-name { font-family: 'Jost', sans-serif; font-weight: 800; font-size: clamp(22px, 5vw, 28px); letter-spacing: 1px; text-transform: uppercase; line-height: 1.15; margin-bottom: 12px; color: var(--text); }
+  .modal-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .modal-tags .tag { padding: 6px 16px; font-size: 13px; font-weight: 600; }
+  .modal-note { font-size: 14px; color: var(--text-dim); line-height: 1.6; padding: 12px 14px; background: var(--bg); border-radius: var(--radius-sm); border-left: 3px solid var(--accent); }
+  .modal-note strong { color: var(--accent); font-weight: 600; }
+
+  /* ═══════════════════════════════════════════
+     MEAL PLAN STYLES
+     ═══════════════════════════════════════════ */
+  .meal-macros {
+    display: flex;
+    gap: 8px;
+    margin: 0 16px 14px;
+  }
+
+  .macro-pill {
+    flex: 1;
+    text-align: center;
+    padding: 10px 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .macro-val {
+    font-family: 'Jost', sans-serif; font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 1px;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .macro-label {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  .meal-timeline {
+    padding: 0 16px;
+    padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .meal-card {
+    position: relative;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .meal-card.pre-workout { border-left: 3px solid var(--accent); }
+  .meal-card.post-workout { border-left: 3px solid var(--hiit); }
+
+  .meal-time {
+    font-family: 'Jost', sans-serif; font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--meal-blue);
+    margin-bottom: 2px;
+  }
+
+  .meal-card.pre-workout .meal-time { color: var(--accent); }
+  .meal-card.post-workout .meal-time { color: var(--hiit); }
+
+  .meal-title {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text);
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  .meal-items {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .meal-item {
+    font-size: 13.5px;
+    color: var(--text);
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.45;
+  }
+
+  .meal-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #e0e0e0;
+  }
+
+  .meal-item em { color: var(--text-dim); font-style: normal; font-size: 12px; }
+
+  .meal-section-label {
+    font-family: 'Jost', sans-serif; font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin: 20px 0 10px;
+    padding-left: 4px;
+  }
+
+  .supplement-card {
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #f0f0f0, #fafafa);
+    border: 1px solid #e0e0e0;
+    border-radius: var(--radius);
+  }
+
+  .supplement-card .meal-title { font-size: 14px; margin-bottom: 8px; }
+  .supplement-card .meal-item::before { background: var(--accent); }
+
+  .hydration-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #f5f5f5, #fafafa);
+    border: 1px solid #d5d5d5;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--meal-blue);
+  }
+
+  .hydration-banner svg { flex-shrink: 0; width: 24px; height: 24px; }
+
+  /* ═══════════════════════════════════════════
+     GROCERY LIST STYLES
+     ═══════════════════════════════════════════ */
+  .grocery-view {
+    padding: 0 16px 16px;
+    padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .grocery-progress {
+    margin: 0 0 16px;
+    padding: 14px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .grocery-progress-bar {
+    flex: 1;
+    height: 6px;
+    background: #e8e8e8;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .grocery-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--grocery-purple);
+    border-radius: 6px;
+    transition: width .4s ease;
+  }
+
+  .grocery-progress-text {
+    font-family: 'Jost', sans-serif; font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: var(--grocery-purple);
+    white-space: nowrap;
+  }
+
+  .grocery-category {
+    margin-bottom: 16px;
+  }
+
+  .grocery-cat-title {
+    font-family: 'Jost', sans-serif; font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--grocery-purple);
+    margin-bottom: 8px;
+    padding-left: 2px;
+  }
+
+  .grocery-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    margin-bottom: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all .2s;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .grocery-item:hover { background: var(--surface-hover); }
+
+  .grocery-item.checked {
+    opacity: 0.5;
+    background: var(--bg);
+  }
+
+  .grocery-item.checked .grocery-item-text {
+    text-decoration: line-through;
+    color: var(--text-dim);
+  }
+
+  .grocery-checkbox {
+    width: 24px;
+    height: 24px;
+    border-radius: 7px;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all .2s;
+  }
+
+  .grocery-item.checked .grocery-checkbox {
+    background: var(--grocery-purple);
+    border-color: var(--grocery-purple);
+  }
+
+  .grocery-checkbox svg { width: 14px; height: 14px; opacity: 0; transition: opacity .2s; }
+  .grocery-item.checked .grocery-checkbox svg { opacity: 1; }
+
+  .grocery-item-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.35;
+  }
+
+  .grocery-clear-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    margin-top: 12px;
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    background: transparent;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all .2s;
+  }
+
+  .grocery-clear-btn:hover { border-color: var(--grocery-purple); color: var(--grocery-purple); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (min-width: 600px) {
+    .header { padding: 48px 24px 20px; }
+    .day-content { padding: 0 24px 20px; padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px)); }
+    .protocol, .warmup-banner { margin-left: 24px; margin-right: 24px; }
+    .exercise-card { padding: 18px; gap: 18px; }
+  }
+
+  @media (min-width: 768px) {
+    body { font-size: 16px; }
+    .container { max-width: 640px; margin: 0 auto; }
+    .utility-belt { max-width: 360px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="header">
+    <h1 class="brand">VOZ <span>FITNESS</span></h1>
+    <div class="phase-tag">Hypertrophy + Recomposition</div>
+  </header>
+
+
+  <!-- ════════════════════════════════════════
+       WORKOUT SECTION
+       ════════════════════════════════════════ -->
+  <div class="section-view active" id="section-workout">
+
+    <div class="protocol" onclick="this.classList.toggle('open')">
+      <div class="protocol-header">
+        <div class="protocol-title">Intensity Protocol</div>
+        <div class="protocol-toggle">&#9662;</div>
+      </div>
+      <div class="protocol-body">
+        <div class="protocol-item"><div class="protocol-bullet"></div><div>Use 65–75% 1RM</div></div>
+        <div class="protocol-item"><div class="protocol-bullet"></div><div>Slow tempo, controlled eccentric (3–4 sec where possible)</div></div>
+        <div class="protocol-item"><div class="protocol-bullet"></div><div>Rest: 30–60s hypertrophy</div></div>
+        <div class="protocol-item"><div class="protocol-bullet"></div><div>No trap dominance: shoulders down, scapula set</div></div>
+        <div class="protocol-item"><div class="protocol-bullet"></div><div>No twisting / heavy oblique loading</div></div>
+      </div>
+    </div>
+
+    <div class="warmup-banner">
+      <div class="warmup-label">Each Session Begins With</div>
+      <div class="warmup-items">
+        <div class="warmup-item">10 min slight incline walk or elliptical</div>
+        <div class="warmup-item">Dynamic mobility (hips + shoulders)</div>
+        <div class="warmup-item">Rear delt + rotator activation</div>
+      </div>
+    </div>
+
+    <!-- DAY TABS (INLINE) -->
+    <div class="day-tabs-row" id="dayTabsRow">
+      <button class="day-tab active" data-day="1">Mon</button>
+      <button class="day-tab" data-day="2">Tue</button>
+      <button class="day-tab rest-tab" data-day="3">Wed</button>
+      <button class="day-tab" data-day="4">Thu</button>
+      <button class="day-tab" data-day="5">Fri</button>
+      <button class="day-tab rest-tab" data-day="6">Sat</button>
+      <button class="day-tab rest-tab" data-day="7">Sun</button>
+    </div>
+
+    <!-- DAY CONTENT BLOCKS -->
+    <div class="day-content active" id="day1">
+      <div class="day-header"><h2 class="day-number">Day 1 — Lower</h2><div class="day-focus">Quad Focus + HIIT</div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Extensions/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Extensions/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 01</div><div class="exercise-name">Leg Extension</div><div class="exercise-tags"><span class="tag">4 × 15</span></div><div class="exercise-note">Pause at top for squeeze</div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Goblet_Squat/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Goblet_Squat/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 02</div><div class="exercise-name">Heel-Elevated DB Goblet Squat</div><div class="exercise-tags"><span class="tag">4 × 10</span></div><div class="exercise-note">Quad bias, upright torso</div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Press/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Press/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 03</div><div class="exercise-name">Leg Press</div><div class="exercise-tags"><span class="tag">4 × 12</span></div><div class="exercise-note">Feet low + narrow, constant tension</div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Split_Squat_with_Dumbbells/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Split_Squat_with_Dumbbells/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 04</div><div class="exercise-name">Bulgarian Split Squat</div><div class="exercise-tags"><span class="tag">4 × 10/leg</span></div><div class="exercise-note">Slow eccentric, heavy DB, upright torso</div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Leg_Curls/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Leg_Curls/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 05</div><div class="exercise-name">Laying Hamstring Curl</div><div class="exercise-tags"><span class="tag">3 × 12</span></div><div class="exercise-note">Slow eccentric</div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Calf_Raises/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Calf_Raises/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 06</div><div class="exercise-name">Standing Calf Raise</div><div class="exercise-tags"><span class="tag">5 × 18</span></div><div class="exercise-note">2 sec pause at top</div></div></div>
+      <div class="hiit-card"><div class="hiit-label"><svg viewBox="0 0 18 18" fill="none"><path d="M9 2l2 5h5l-4 3.5 1.5 5L9 12.5 4.5 15.5 6 10.5 2 7h5z" stroke="#111111" stroke-width="1.5" stroke-linejoin="round"/></svg>HIIT Finisher</div><div class="hiit-detail">Spin Bike or Sprints — <strong>8 rounds</strong></div><div class="hiit-detail">30s <strong>HIGH</strong> intensity / 30s <strong>NO</strong> resistance</div><div class="hiit-liss">Then: 20 min LISS incline walk</div></div>
+    </div>
+
+    <div class="day-content" id="day2">
+      <div class="day-header"><h2 class="day-number">Day 2 — Upper Push</h2><div class="day-focus">Upper Chest + Delts</div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Dumbbell_Press/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Dumbbell_Press/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 01</div><div class="exercise-name">Incline DB Press</div><div class="exercise-tags"><span class="tag">5 × 8</span><span class="tag heavy">Heavy</span></div><div class="exercise-note">Primary focus. No arching into traps</div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Cable_Flye/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Cable_Flye/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 02</div><div class="exercise-name">Low-to-High Cable Fly</div><div class="exercise-tags"><span class="tag">4 × 12</span></div><div class="exercise-note">Upper chest line</div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Bench_Press/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Bench_Press/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 03</div><div class="exercise-name">Flat DB Press</div><div class="exercise-tags"><span class="tag">3 × 10</span></div><div class="exercise-note">Slow eccentric, weight above chest not head</div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Side_Lateral_Raise/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Side_Lateral_Raise/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 04</div><div class="exercise-name">Seated DB Lateral Raise</div><div class="exercise-tags"><span class="tag">5 × 15</span></div><div class="exercise-note">Strict, no swing</div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Seated_Lateral_Raise/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Seated_Lateral_Raise/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 05</div><div class="exercise-name">Cable Lateral Raise (Single Arm)</div><div class="exercise-tags"><span class="tag">3 × 12</span></div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Dumbbell_Raise/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Dumbbell_Raise/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 06</div><div class="exercise-name">Front Plate Raise</div><div class="exercise-tags"><span class="tag">3 × 12</span></div><div class="exercise-note">Light, controlled</div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pushups/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pushups/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 07</div><div class="exercise-name">Push-Up Mechanical Drop Set</div><div class="exercise-tags"><span class="tag">3 rounds</span></div></div></div>
+      <div class="section-note"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#111111" stroke-width="1.2"/><path d="M8 5v4M8 11v.5" stroke="#111111" stroke-width="1.5" stroke-linecap="round"/></svg>No shrugging. Delts stay isolated. Chest drives movement.</div>
+    </div>
+
+    <div class="day-content" id="day3">
+      <div class="day-header"><h2 class="day-number">Day 3 — Rest</h2><div class="day-focus rest-focus">Active Recovery</div></div>
+      <div class="rest-card">
+        <div class="rest-item"><div class="rest-icon"><svg viewBox="0 0 22 22" fill="none"><path d="M4 16l6-4 6 4" stroke="#999999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 18h8" stroke="#999999" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="rest-text">30 min high pace walk</div></div>
+        <div class="rest-item"><div class="rest-icon"><svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="6" stroke="#999999" stroke-width="1.5"/><path d="M11 8v3l2 2" stroke="#999999" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="rest-text">Mobility + chest opening<span>Dynamic and static stretching</span></div></div>
+        <div class="rest-item"><div class="rest-icon"><svg viewBox="0 0 22 22" fill="none"><path d="M6 14l5-6 5 6" stroke="#999999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="6" r="2" stroke="#999999" stroke-width="1.2"/></svg></div><div class="rest-text">Optional light rear delt work<span>Band work or I-Y-W movements</span></div></div>
+      </div>
+    </div>
+
+    <div class="day-content" id="day4">
+      <div class="day-header"><h2 class="day-number">Day 4 — Lower</h2><div class="day-focus">Glutes + Quads + Calves</div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Romanian_Deadlift/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Romanian_Deadlift/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 01</div><div class="exercise-name">DB Romanian Deadlift</div><div class="exercise-tags"><span class="tag">4 × 10</span></div><div class="exercise-note">Hamstring focus, do not stand fully — keep tension</div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Step_Ups/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Step_Ups/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 02</div><div class="exercise-name">DB High Step-Ups</div><div class="exercise-tags"><span class="tag">4 × 10/leg</span></div><div class="exercise-note">Controlled, very slow</div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hack_Squat/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hack_Squat/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 03</div><div class="exercise-name">Hack Squat or Sumo DB Squat</div><div class="exercise-tags"><span class="tag">4 × 12</span></div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bodyweight_Walking_Lunge/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bodyweight_Walking_Lunge/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 04</div><div class="exercise-name">DB Walking Lunges</div><div class="exercise-tags"><span class="tag">4 × 12/leg</span></div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Calf_Raise/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Calf_Raise/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 05</div><div class="exercise-name">Seated Calf Raise</div><div class="exercise-tags"><span class="tag">5 × 15</span></div><div class="exercise-note">Slow + pause</div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plank/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dead_Bug/0.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 06</div><div class="exercise-name">Core: Plank + Dead Bug</div><div class="exercise-tags"><span class="tag">Plank 3 × 60s</span><span class="tag">Dead Bug 3 × 10/side</span></div><div class="exercise-note">No waist thickening exercises</div></div></div>
+    </div>
+
+    <div class="day-content" id="day5">
+      <div class="day-header"><h2 class="day-number">Day 5 — Upper</h2><div class="day-focus">Delt + Arms Focus + HIIT</div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/T-Bar_Row_with_Handle/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/T-Bar_Row_with_Handle/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 01</div><div class="exercise-name">Chest-Supported T-Row</div><div class="exercise-tags"><span class="tag">4 × 10</span></div><div class="exercise-note">No trap pull</div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Wide-Grip_Lat_Pulldown/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Wide-Grip_Lat_Pulldown/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 02</div><div class="exercise-name">Neutral Grip Lat Pulldown</div><div class="exercise-tags"><span class="tag">4 × 10</span></div><div class="exercise-note">No swinging</div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_Dumbbell_Rear_Delt_Raise_With_Head_On_Bench/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_Dumbbell_Rear_Delt_Raise_With_Head_On_Bench/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 03</div><div class="exercise-name">DB Rear Delt Fly (Incline)</div><div class="exercise-tags"><span class="tag">3 × 15</span></div><div class="exercise-note">Light weight, full squeeze, no upper back</div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Face_Pull/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Face_Pull/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 04</div><div class="exercise-name">Cable Face Pull</div><div class="exercise-tags"><span class="tag">3 × 15</span></div><div class="exercise-note">Wide, high</div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Lateral_Raise/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Lateral_Raise/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 05</div><div class="exercise-name">DB Lateral Raise Dropset</div><div class="exercise-tags"><span class="tag">3 rounds</span></div><div class="exercise-note">No traps</div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/EZ-Bar_Curl/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/EZ-Bar_Curl/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 06</div><div class="exercise-name">EZ Bar Curl</div><div class="exercise-tags"><span class="tag">4 × 12</span></div></div></div>
+      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Triceps_Pushdown_-_Rope_Attachment/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Triceps_Pushdown_-_Rope_Attachment/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 07</div><div class="exercise-name">Rope Tricep Pushdown</div><div class="exercise-tags"><span class="tag">4 × 12</span></div></div></div>
+      <div class="hiit-card"><div class="hiit-label"><svg viewBox="0 0 18 18" fill="none"><path d="M9 2l2 5h5l-4 3.5 1.5 5L9 12.5 4.5 15.5 6 10.5 2 7h5z" stroke="#111111" stroke-width="1.5" stroke-linejoin="round"/></svg>HIIT Finisher</div><div class="hiit-detail">Spin Bike or Sprints — <strong>8 rounds</strong></div><div class="hiit-detail">30s <strong>HIGH</strong> intensity / 30s <strong>NO</strong> resistance</div><div class="hiit-liss">Then: 20 min LISS incline walk</div></div>
+    </div>
+
+    <div class="day-content" id="day6">
+      <div class="day-header"><h2 class="day-number">Day 6 — Recovery</h2><div class="day-focus rest-focus">Optional LISS</div></div>
+      <div class="rest-card">
+        <div class="rest-item"><div class="rest-icon"><svg viewBox="0 0 22 22" fill="none"><path d="M4 16l6-4 6 4" stroke="#999999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 18h8" stroke="#999999" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="rest-text">30–45 min incline walk</div></div>
+        <div class="rest-item"><div class="rest-icon"><svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="6" stroke="#999999" stroke-width="1.5"/><path d="M8 11c1-2 2-3 3-3s2 1 3 3" stroke="#999999" stroke-width="1.2" stroke-linecap="round"/></svg></div><div class="rest-text">Light mobility and injury care</div></div>
+        <div class="rest-item"><div class="rest-icon"><svg viewBox="0 0 22 22" fill="none"><path d="M7 7l8 8M15 7l-8 8" stroke="#999999" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="rest-text">No resistance training</div></div>
+      </div>
+    </div>
+
+    <div class="day-content" id="day7">
+      <div class="day-header"><h2 class="day-number">Day 7</h2><div class="day-focus rest-focus">Full Rest</div></div>
+      <div class="full-rest">
+        <div class="full-rest-icon"><svg viewBox="0 0 36 36" fill="none"><path d="M10 22c0-6 4-10 8-10s8 4 8 10" stroke="#999999" stroke-width="1.5" stroke-linecap="round"/><path d="M14 22c0-3 2-5 4-5s4 2 4 5" stroke="#999999" stroke-width="1.5" stroke-linecap="round"/><circle cx="18" cy="22" r="1.5" fill="#999999"/><path d="M8 26h20" stroke="#999999" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <h3>Full Rest</h3>
+        <p>Recover. Recharge. Your muscles grow when you rest, not when you train.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       MEAL PLAN SECTION
+       ════════════════════════════════════════ -->
+  <div class="section-view" id="section-meals">
+
+    <div class="meal-macros">
+      <div class="macro-pill"><div class="macro-val">142g</div><div class="macro-label">Protein</div></div>
+      <div class="macro-pill"><div class="macro-val">165g</div><div class="macro-label">Carbs</div></div>
+      <div class="macro-pill"><div class="macro-val">71g</div><div class="macro-label">Fats</div></div>
+    </div>
+
+    <div class="hydration-banner">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C12 2 5 10 5 15a7 7 0 1014 0c0-5-7-13-7-13z" stroke="#111111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      2.5L water daily &middot; Salt food for performance + pumps
+    </div>
+
+    <div class="meal-timeline">
+
+      <div class="meal-card">
+        <div class="meal-time">~7:00 AM &middot; Wake Up</div>
+        <div class="meal-title">Meal 1 — Breakfast</div>
+        <div class="meal-items">
+          <div class="meal-item">½ cup cream of rice + almond milk</div>
+          <div class="meal-item">1 scoop protein <em>(water, almond milk, or mixed in)</em></div>
+          <div class="meal-item">1 tbsp hemp hearts or chia seeds</div>
+          <div class="meal-item">2 tbsp natural peanut butter</div>
+        </div>
+      </div>
+
+      <div class="meal-card">
+        <div class="meal-time">~12:00 PM</div>
+        <div class="meal-title">Meal 2 — Lunch</div>
+        <div class="meal-items">
+          <div class="meal-item">5 oz lean ground turkey or chicken</div>
+          <div class="meal-item">½ cup white basmati rice</div>
+          <div class="meal-item">Cooked vegetables <em>(carrot, zucchini, eggplant)</em></div>
+          <div class="meal-item">1 tbsp olive or avocado oil</div>
+        </div>
+      </div>
+
+      <div class="meal-card pre-workout">
+        <div class="meal-time">~3:30 PM &middot; Pre-Workout</div>
+        <div class="meal-title">Performance Fuel</div>
+        <div class="meal-items">
+          <div class="meal-item">2 rice cakes</div>
+          <div class="meal-item">1 tbsp natural peanut butter</div>
+          <div class="meal-item">½ tbsp honey</div>
+          <div class="meal-item">Cinnamon</div>
+        </div>
+      </div>
+
+      <div class="meal-section-label">Workout @ 5:00 PM</div>
+
+      <div class="meal-card post-workout">
+        <div class="meal-time">~6:15 PM &middot; Post-Workout</div>
+        <div class="meal-title">Recovery</div>
+        <div class="meal-items">
+          <div class="meal-item">1 scoop protein</div>
+          <div class="meal-item">1 rice cake</div>
+        </div>
+      </div>
+
+      <div class="meal-card">
+        <div class="meal-time">~7:30 PM</div>
+        <div class="meal-title">Meal 3 — Dinner</div>
+        <div class="meal-items">
+          <div class="meal-item">5 oz white fish, chicken, or turkey <em>(1–2x/wk: salmon or lean beef)</em></div>
+          <div class="meal-item">½ cup rice, quinoa, or squash</div>
+          <div class="meal-item">1 cup cooked greens or vegetables</div>
+          <div class="meal-item">1 tbsp flax or olive oil</div>
+        </div>
+      </div>
+
+      <div class="meal-card">
+        <div class="meal-time">~9:00 PM</div>
+        <div class="meal-title">Meal 4 — Evening</div>
+        <div class="meal-items">
+          <div class="meal-item">¾ cup coconut or skyr yogurt</div>
+          <div class="meal-item">½ scoop protein or collagen</div>
+          <div class="meal-item">1 tbsp fruit puree or ½ cup berries <em>(mango or mixed)</em></div>
+        </div>
+      </div>
+
+      <div class="meal-section-label">Supplements</div>
+
+      <div class="supplement-card">
+        <div class="meal-title">Daily — Keep Consistent</div>
+        <div class="meal-items">
+          <div class="meal-item">Vitamin D3</div>
+          <div class="meal-item">B12 / B Complex</div>
+          <div class="meal-item">Ashwagandha</div>
+          <div class="meal-item">Greens supplement powder</div>
+          <div class="meal-item">PM: GABA + ZMA</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       GROCERY LIST SECTION
+       ════════════════════════════════════════ -->
+  <div class="section-view" id="section-grocery">
+    <div class="grocery-view">
+
+      <div class="grocery-progress">
+        <div class="grocery-progress-bar"><div class="grocery-progress-fill" id="groceryFill"></div></div>
+        <div class="grocery-progress-text" id="groceryCount">0 / 0</div>
+      </div>
+
+      <div class="grocery-category">
+        <div class="grocery-cat-title">Protein</div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Lean ground turkey</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Chicken breast</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">White fish (tilapia, cod, or sole)</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Salmon <em style="color:var(--text-dim);font-style:normal;font-size:12px">(1–2x/wk)</em></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Protein powder (whey or plant)</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Collagen powder</div></div>
+      </div>
+
+      <div class="grocery-category">
+        <div class="grocery-cat-title">Carbs &amp; Grains</div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Cream of rice</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">White basmati rice</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Quinoa</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Rice cakes</div></div>
+      </div>
+
+      <div class="grocery-category">
+        <div class="grocery-cat-title">Vegetables &amp; Greens</div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Carrots</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Zucchini</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Eggplant</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Cooking greens (spinach, kale, or chard)</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Squash</div></div>
+      </div>
+
+      <div class="grocery-category">
+        <div class="grocery-cat-title">Fruits</div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Berries (mixed or blueberries)</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Fruit puree (unsweetened mango or berry)</div></div>
+      </div>
+
+      <div class="grocery-category">
+        <div class="grocery-cat-title">Fats &amp; Oils</div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Natural peanut butter</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Olive oil</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Avocado oil</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Flax oil or ground flaxseed</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Hemp hearts</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Chia seeds</div></div>
+      </div>
+
+      <div class="grocery-category">
+        <div class="grocery-cat-title">Dairy &amp; Alternatives</div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Unsweetened almond milk</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Coconut yogurt or skyr</div></div>
+      </div>
+
+      <div class="grocery-category">
+        <div class="grocery-cat-title">Pantry &amp; Extras</div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Honey</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Cinnamon</div></div>
+      </div>
+
+      <div class="grocery-category">
+        <div class="grocery-cat-title">Supplements</div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Vitamin D3</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">B12 / B Complex</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Ashwagandha</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Greens supplement powder</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">GABA</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">ZMA</div></div>
+      </div>
+
+      <button class="grocery-clear-btn" onclick="clearGrocery()">Reset checklist</button>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- FLOATING UTILITY BELT -->
+<nav class="utility-belt" id="utilityBelt">
+  <div class="utility-belt-inner" id="beltInner" data-active="0">
+    <button class="belt-btn active" data-section="workout" onclick="switchSection('workout')">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="1" y="10.5" width="22" height="3" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="4" y="7" width="5" height="10" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="15" y="7" width="5" height="10" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg>
+      <span class="belt-label">Workout</span>
+    </button>
+    <button class="belt-btn" data-section="meals" onclick="switchSection('meals')">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 3c-1 4-4 6-4 10a4 4 0 008 0c0-4-3-6-4-10z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 21h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span class="belt-label">Meals</span>
+    </button>
+    <button class="belt-btn" data-section="grocery" onclick="switchSection('grocery')">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M6 6h1.5l2 10h7L19 9H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="19" r="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="16" cy="19" r="1.5" stroke="currentColor" stroke-width="1.3"/></svg>
+      <span class="belt-label">Grocery</span>
+    </button>
+  </div>
+</nav>
+
+<!-- EXERCISE MODAL -->
+<div class="modal-overlay" id="modalOverlay"></div>
+<div class="modal-sheet" id="modalSheet">
+  <div class="modal-handle"></div>
+  <div class="modal-images">
+    <div class="modal-img-pair"><img id="modalImg0" src="" alt="Start"><img id="modalImg1" src="" alt="End"></div>
+    <span class="modal-img-label start">Start</span>
+    <span class="modal-img-label end">End</span>
+  </div>
+  <div class="modal-body">
+    <div class="modal-exercise-num" id="modalNum"></div>
+    <div class="modal-exercise-name" id="modalName"></div>
+    <div class="modal-tags" id="modalTags"></div>
+    <div class="modal-note" id="modalNote"></div>
+  </div>
+</div>
+
+<script>
+  // ─── SECTION SWITCHER (UTILITY BELT) ───
+  const beltInner = document.getElementById('beltInner');
+  const sectionNames = ['workout', 'meals', 'grocery'];
+  let currentSection = 'workout';
+
+  function switchSection(name) {
+    currentSection = name;
+    document.querySelectorAll('.section-view').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.belt-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('section-' + name).classList.add('active');
+    document.querySelector(`.belt-btn[data-section="${name}"]`).classList.add('active');
+    beltInner.setAttribute('data-active', sectionNames.indexOf(name));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ─── DAY TABS (INLINE) ───
+  const tabs = document.querySelectorAll('.day-tab');
+  const contents = document.querySelectorAll('.day-content');
+  let currentDay = 1;
+
+  function activateDay(dayNum) {
+    currentDay = dayNum;
+    tabs.forEach(t => t.classList.remove('active'));
+    const activeTab = document.querySelector(`.day-tab[data-day="${dayNum}"]`);
+    if (activeTab) activeTab.classList.add('active');
+    contents.forEach(c => c.classList.remove('active'));
+    document.getElementById('day' + dayNum).classList.add('active');
+    // Scroll the tab into view
+    if (activeTab) activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => activateDay(parseInt(tab.dataset.day)));
+  });
+
+  // Auto-select today
+  const today = new Date().getDay();
+  const dayMap = { 1:1, 2:2, 3:3, 4:4, 5:5, 6:6, 0:7 };
+  activateDay(dayMap[today] || 1);
+
+  // ─── SWIPE BETWEEN DAYS ───
+  let swipeStartX = 0;
+  let swipeStartY = 0;
+  const workoutSection = document.getElementById('section-workout');
+
+  workoutSection.addEventListener('touchstart', e => {
+    swipeStartX = e.touches[0].clientX;
+    swipeStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  workoutSection.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - swipeStartX;
+    const dy = e.changedTouches[0].clientY - swipeStartY;
+    // Only trigger if horizontal swipe is dominant and long enough
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      if (dx < 0 && currentDay < 7) {
+        activateDay(currentDay + 1);
+      } else if (dx > 0 && currentDay > 1) {
+        activateDay(currentDay - 1);
+      }
+    }
+  }, { passive: true });
+
+  // ─── EXERCISE MODAL ───
+  const overlay = document.getElementById('modalOverlay');
+  const sheet = document.getElementById('modalSheet');
+  function openModal(card) {
+    const imgs = card.querySelectorAll('.img-pair img');
+    const num = card.querySelector('.exercise-num')?.textContent || '';
+    const name = card.querySelector('.exercise-name')?.textContent || '';
+    const tagEls = card.querySelectorAll('.tag');
+    const note = card.querySelector('.exercise-note')?.textContent || '';
+    if (imgs.length >= 2) { document.getElementById('modalImg0').src = imgs[0].src; document.getElementById('modalImg1').src = imgs[1].src; }
+    document.getElementById('modalNum').textContent = num;
+    document.getElementById('modalName').textContent = name;
+    const mt = document.getElementById('modalTags'); mt.innerHTML = '';
+    tagEls.forEach(t => { const s = document.createElement('span'); s.className = t.className; s.textContent = t.textContent; mt.appendChild(s); });
+    const mn = document.getElementById('modalNote');
+    if (note) { mn.style.display = 'block'; mn.innerHTML = '<strong>Cue:</strong> ' + note; } else { mn.style.display = 'none'; }
+    document.body.style.overflow = 'hidden';
+    overlay.classList.add('open');
+    requestAnimationFrame(() => sheet.classList.add('open'));
+  }
+  function closeModal() { sheet.classList.remove('open'); overlay.classList.remove('open'); document.body.style.overflow = ''; }
+  document.querySelectorAll('.exercise-card').forEach(c => c.addEventListener('click', () => openModal(c)));
+  overlay.addEventListener('click', closeModal);
+  let touchStartY = 0;
+  sheet.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, { passive: true });
+  sheet.addEventListener('touchend', e => { if (e.changedTouches[0].clientY - touchStartY > 80) closeModal(); }, { passive: true });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // ─── GROCERY CHECKLIST ───
+  function updateGroceryProgress() {
+    const all = document.querySelectorAll('.grocery-item');
+    const checked = document.querySelectorAll('.grocery-item.checked');
+    const pct = all.length ? (checked.length / all.length * 100) : 0;
+    document.getElementById('groceryFill').style.width = pct + '%';
+    document.getElementById('groceryCount').textContent = checked.length + ' / ' + all.length;
+  }
+  function toggleGrocery(el) {
+    el.classList.toggle('checked');
+    updateGroceryProgress();
+  }
+  function clearGrocery() {
+    document.querySelectorAll('.grocery-item.checked').forEach(el => el.classList.remove('checked'));
+    updateGroceryProgress();
+  }
+  updateGroceryProgress();
+</script>
+</body>
+</html>
