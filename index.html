@@ -222,14 +222,33 @@
 
   /* ─── EXERCISE CARD ─── */
   .exercise-card { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 16px; margin-bottom: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); transition: border-color .2s, background .2s; cursor: pointer; -webkit-user-select: none; user-select: none; }
-  @media (min-width: 480px) { .exercise-card { flex-direction: row; align-items: center; } }
+  @media (min-width: 480px) { .exercise-card { flex-direction: column; } }
   .exercise-card:hover { border-color: #d5d5d5; background: var(--surface-hover); }
   .exercise-card:active { transform: scale(0.985); transition: transform .1s; }
-  .exercise-visual { flex-shrink: 0; width: 160px; height: 160px; border-radius: 12px; background: #f0f0f0; border: 1px solid #e0e0e0; overflow: hidden; position: relative; }
-  .exercise-visual .img-pair { display: flex; width: 200%; height: 100%; animation: slideExercise 3s ease-in-out infinite alternate; }
+  .exercise-visual { width: 100%; height: 140px; border-radius: 12px; background: #f0f0f0; border: 1px solid #e0e0e0; overflow: hidden; position: relative; }
+  .exercise-visual .img-pair { display: flex; width: 100%; height: 100%; }
   .exercise-visual .img-pair img { width: 50%; height: 100%; object-fit: cover; object-position: center top; }
-  @keyframes slideExercise { 0%, 35% { transform: translateX(0); } 65%, 100% { transform: translateX(-50%); } }
-  .exercise-info { flex: 1; min-width: 0; }
+  
+  /* Exercise check-off */
+  .exercise-card { position: relative; }
+  .exercise-check {
+    position: absolute; top: 12px; right: 12px; z-index: 2;
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 2px solid var(--border); background: rgba(255,255,255,0.85);
+    display: flex; align-items: center; justify-content: center;
+    transition: all .2s; cursor: pointer;
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  }
+  .exercise-card.ex-done .exercise-check {
+    background: var(--accent); border-color: var(--accent);
+  }
+  .exercise-check svg { width: 16px; height: 16px; opacity: 0; transition: opacity .2s; }
+  .exercise-card.ex-done .exercise-check svg { opacity: 1; }
+  .exercise-card.ex-done .exercise-visual { opacity: 0.5; }
+  .exercise-card.ex-done .exercise-info { opacity: 0.45; }
+  .exercise-card.ex-done .exercise-name { text-decoration: line-through; text-decoration-color: var(--text-dim); }
+  .exercise-card.ex-done { border-color: #d5d5d5; }
+  .exercise-info { flex: 1; min-width: 0; width: 100%; }
   .exercise-num { font-family: 'Jost', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 2px; color: var(--accent); margin-bottom: 2px; }
   .exercise-name { font-weight: 600; font-size: 14.5px; line-height: 1.3; margin-bottom: 6px; color: var(--text); }
   .exercise-tags { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -360,52 +379,35 @@
   .meal-item {
     font-size: 13.5px;
     color: var(--text);
-    padding: 8px 10px;
+    padding: 4px 10px;
     position: relative;
     line-height: 1.45;
+  }
+  .meal-card-header {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    border-radius: 8px;
+    align-items: flex-start;
+    gap: 12px;
     cursor: pointer;
-    transition: background .15s, opacity .2s;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
   }
-
-  .meal-item:active { background: var(--surface-hover); }
-
-  .meal-item.checked {
-    opacity: 0.45;
+  .meal-card-header:active { opacity: 0.7; }
+  .meal-card-check {
+    width: 26px; height: 26px; min-width: 26px; border-radius: 8px;
+    border: 2px solid var(--border); display: flex; align-items: center;
+    justify-content: center; transition: all .2s; background: transparent; margin-top: 1px;
   }
-
-  .meal-item.checked .meal-item-text {
-    text-decoration: line-through;
-    text-decoration-color: var(--text-dim);
-  }
-
-  .meal-checkbox {
-    width: 22px;
-    height: 22px;
-    min-width: 22px;
-    border-radius: 6px;
-    border: 2px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all .2s;
-    background: transparent;
-  }
-
-  .meal-item.checked .meal-checkbox {
-    background: var(--meal-blue);
-    border-color: var(--meal-blue);
-  }
-
-  .meal-checkbox svg { width: 14px; height: 14px; opacity: 0; transition: opacity .2s; }
-  .meal-item.checked .meal-checkbox svg { opacity: 1; }
-
-  .meal-item-text { flex: 1; }
+  .meal-card.checked .meal-card-check { background: var(--meal-blue); border-color: var(--meal-blue); }
+  .meal-card-check svg { width: 16px; height: 16px; opacity: 0; transition: opacity .2s; }
+  .meal-card.checked .meal-card-check svg { opacity: 1; }
+  .meal-card-info { flex: 1; }
+  .meal-card.checked .meal-items { opacity: 0.4; }
+  .meal-card.checked .meal-time, .meal-card.checked .meal-title { opacity: 0.5; }
+  .meal-card.checked .meal-title { text-decoration: line-through; text-decoration-color: var(--text-dim); }
+  .supplement-card.checked .meal-card-check { background: var(--meal-blue); border-color: var(--meal-blue); }
+  .supplement-card.checked .meal-card-check svg { opacity: 1; }
+  .supplement-card.checked .meal-items { opacity: 0.4; }
+  .supplement-card.checked .meal-title { opacity: 0.5; text-decoration: line-through; text-decoration-color: var(--text-dim); }
   .meal-item em { color: var(--text-dim); font-style: normal; font-size: 12px; }
 
   .meal-progress {
@@ -613,7 +615,7 @@
     .header { padding: 48px 24px 20px; }
     .day-content { padding: 0 24px 20px; padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px)); }
     .protocol, .warmup-banner { margin-left: 24px; margin-right: 24px; }
-    .exercise-card { padding: 18px; gap: 18px; }
+    .exercise-card { padding: 16px; gap: 12px; }
   }
 
   @media (min-width: 768px) {
@@ -675,24 +677,24 @@
     <!-- DAY CONTENT BLOCKS -->
     <div class="day-content active" id="day1">
       <div class="day-header"><h2 class="day-number">Day 1 — Lower</h2><div class="day-focus">Quad Focus + HIIT</div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Extensions/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Extensions/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 01</div><div class="exercise-name">Leg Extension</div><div class="exercise-tags"><span class="tag">4 × 15</span></div><div class="exercise-note">Pause at top for squeeze</div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Goblet_Squat/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Goblet_Squat/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 02</div><div class="exercise-name">Heel-Elevated DB Goblet Squat</div><div class="exercise-tags"><span class="tag">4 × 10</span></div><div class="exercise-note">Quad bias, upright torso</div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Press/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Press/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 03</div><div class="exercise-name">Leg Press</div><div class="exercise-tags"><span class="tag">4 × 12</span></div><div class="exercise-note">Feet low + narrow, constant tension</div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Split_Squat_with_Dumbbells/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Split_Squat_with_Dumbbells/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 04</div><div class="exercise-name">Bulgarian Split Squat</div><div class="exercise-tags"><span class="tag">4 × 10/leg</span></div><div class="exercise-note">Slow eccentric, heavy DB, upright torso</div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Leg_Curls/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Leg_Curls/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 05</div><div class="exercise-name">Laying Hamstring Curl</div><div class="exercise-tags"><span class="tag">3 × 12</span></div><div class="exercise-note">Slow eccentric</div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Calf_Raises/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Calf_Raises/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 06</div><div class="exercise-name">Standing Calf Raise</div><div class="exercise-tags"><span class="tag">5 × 18</span></div><div class="exercise-note">2 sec pause at top</div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Extensions/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Extensions/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 01</div><div class="exercise-name">Leg Extension</div><div class="exercise-tags"><span class="tag">4 × 15</span></div><div class="exercise-note">Pause at top for squeeze</div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Goblet_Squat/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Goblet_Squat/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 02</div><div class="exercise-name">Heel-Elevated DB Goblet Squat</div><div class="exercise-tags"><span class="tag">4 × 10</span></div><div class="exercise-note">Quad bias, upright torso</div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Press/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Press/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 03</div><div class="exercise-name">Leg Press</div><div class="exercise-tags"><span class="tag">4 × 12</span></div><div class="exercise-note">Feet low + narrow, constant tension</div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Split_Squat_with_Dumbbells/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Split_Squat_with_Dumbbells/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 04</div><div class="exercise-name">Bulgarian Split Squat</div><div class="exercise-tags"><span class="tag">4 × 10/leg</span></div><div class="exercise-note">Slow eccentric, heavy DB, upright torso</div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Leg_Curls/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Leg_Curls/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 05</div><div class="exercise-name">Laying Hamstring Curl</div><div class="exercise-tags"><span class="tag">3 × 12</span></div><div class="exercise-note">Slow eccentric</div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Calf_Raises/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Calf_Raises/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 06</div><div class="exercise-name">Standing Calf Raise</div><div class="exercise-tags"><span class="tag">5 × 18</span></div><div class="exercise-note">2 sec pause at top</div></div></div>
       <div class="hiit-card"><div class="hiit-label"><svg viewBox="0 0 18 18" fill="none"><path d="M9 2l2 5h5l-4 3.5 1.5 5L9 12.5 4.5 15.5 6 10.5 2 7h5z" stroke="#111111" stroke-width="1.5" stroke-linejoin="round"/></svg>HIIT Finisher</div><div class="hiit-detail">Spin Bike or Sprints — <strong>8 rounds</strong></div><div class="hiit-detail">30s <strong>HIGH</strong> intensity / 30s <strong>NO</strong> resistance</div><div class="hiit-liss">Then: 20 min LISS incline walk</div></div>
     </div>
 
     <div class="day-content" id="day2">
       <div class="day-header"><h2 class="day-number">Day 2 — Upper Push</h2><div class="day-focus">Upper Chest + Delts</div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Dumbbell_Press/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Dumbbell_Press/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 01</div><div class="exercise-name">Incline DB Press</div><div class="exercise-tags"><span class="tag">5 × 8</span><span class="tag heavy">Heavy</span></div><div class="exercise-note">Primary focus. No arching into traps</div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Cable_Flye/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Cable_Flye/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 02</div><div class="exercise-name">Low-to-High Cable Fly</div><div class="exercise-tags"><span class="tag">4 × 12</span></div><div class="exercise-note">Upper chest line</div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Bench_Press/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Bench_Press/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 03</div><div class="exercise-name">Flat DB Press</div><div class="exercise-tags"><span class="tag">3 × 10</span></div><div class="exercise-note">Slow eccentric, weight above chest not head</div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Side_Lateral_Raise/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Side_Lateral_Raise/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 04</div><div class="exercise-name">Seated DB Lateral Raise</div><div class="exercise-tags"><span class="tag">5 × 15</span></div><div class="exercise-note">Strict, no swing</div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Seated_Lateral_Raise/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Seated_Lateral_Raise/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 05</div><div class="exercise-name">Cable Lateral Raise (Single Arm)</div><div class="exercise-tags"><span class="tag">3 × 12</span></div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Dumbbell_Raise/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Dumbbell_Raise/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 06</div><div class="exercise-name">Front Plate Raise</div><div class="exercise-tags"><span class="tag">3 × 12</span></div><div class="exercise-note">Light, controlled</div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pushups/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pushups/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 07</div><div class="exercise-name">Push-Up Mechanical Drop Set</div><div class="exercise-tags"><span class="tag">3 rounds</span></div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Dumbbell_Press/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Dumbbell_Press/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 01</div><div class="exercise-name">Incline DB Press</div><div class="exercise-tags"><span class="tag">5 × 8</span><span class="tag heavy">Heavy</span></div><div class="exercise-note">Primary focus. No arching into traps</div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Cable_Flye/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Cable_Flye/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 02</div><div class="exercise-name">Low-to-High Cable Fly</div><div class="exercise-tags"><span class="tag">4 × 12</span></div><div class="exercise-note">Upper chest line</div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Bench_Press/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Bench_Press/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 03</div><div class="exercise-name">Flat DB Press</div><div class="exercise-tags"><span class="tag">3 × 10</span></div><div class="exercise-note">Slow eccentric, weight above chest not head</div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Side_Lateral_Raise/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Side_Lateral_Raise/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 04</div><div class="exercise-name">Seated DB Lateral Raise</div><div class="exercise-tags"><span class="tag">5 × 15</span></div><div class="exercise-note">Strict, no swing</div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Seated_Lateral_Raise/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Seated_Lateral_Raise/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 05</div><div class="exercise-name">Cable Lateral Raise (Single Arm)</div><div class="exercise-tags"><span class="tag">3 × 12</span></div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Dumbbell_Raise/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Dumbbell_Raise/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 06</div><div class="exercise-name">Front Plate Raise</div><div class="exercise-tags"><span class="tag">3 × 12</span></div><div class="exercise-note">Light, controlled</div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pushups/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pushups/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 07</div><div class="exercise-name">Push-Up Mechanical Drop Set</div><div class="exercise-tags"><span class="tag">3 rounds</span></div></div></div>
       <div class="section-note"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#111111" stroke-width="1.2"/><path d="M8 5v4M8 11v.5" stroke="#111111" stroke-width="1.5" stroke-linecap="round"/></svg>No shrugging. Delts stay isolated. Chest drives movement.</div>
     </div>
 
@@ -707,23 +709,23 @@
 
     <div class="day-content" id="day4">
       <div class="day-header"><h2 class="day-number">Day 4 — Lower</h2><div class="day-focus">Glutes + Quads + Calves</div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Romanian_Deadlift/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Romanian_Deadlift/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 01</div><div class="exercise-name">DB Romanian Deadlift</div><div class="exercise-tags"><span class="tag">4 × 10</span></div><div class="exercise-note">Hamstring focus, do not stand fully — keep tension</div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Step_Ups/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Step_Ups/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 02</div><div class="exercise-name">DB High Step-Ups</div><div class="exercise-tags"><span class="tag">4 × 10/leg</span></div><div class="exercise-note">Controlled, very slow</div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hack_Squat/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hack_Squat/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 03</div><div class="exercise-name">Hack Squat or Sumo DB Squat</div><div class="exercise-tags"><span class="tag">4 × 12</span></div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bodyweight_Walking_Lunge/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bodyweight_Walking_Lunge/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 04</div><div class="exercise-name">DB Walking Lunges</div><div class="exercise-tags"><span class="tag">4 × 12/leg</span></div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Calf_Raise/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Calf_Raise/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 05</div><div class="exercise-name">Seated Calf Raise</div><div class="exercise-tags"><span class="tag">5 × 15</span></div><div class="exercise-note">Slow + pause</div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plank/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dead_Bug/0.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 06</div><div class="exercise-name">Core: Plank + Dead Bug</div><div class="exercise-tags"><span class="tag">Plank 3 × 60s</span><span class="tag">Dead Bug 3 × 10/side</span></div><div class="exercise-note">No waist thickening exercises</div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Romanian_Deadlift/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Romanian_Deadlift/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 01</div><div class="exercise-name">DB Romanian Deadlift</div><div class="exercise-tags"><span class="tag">4 × 10</span></div><div class="exercise-note">Hamstring focus, do not stand fully — keep tension</div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Step_Ups/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Step_Ups/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 02</div><div class="exercise-name">DB High Step-Ups</div><div class="exercise-tags"><span class="tag">4 × 10/leg</span></div><div class="exercise-note">Controlled, very slow</div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hack_Squat/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hack_Squat/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 03</div><div class="exercise-name">Hack Squat or Sumo DB Squat</div><div class="exercise-tags"><span class="tag">4 × 12</span></div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bodyweight_Walking_Lunge/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bodyweight_Walking_Lunge/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 04</div><div class="exercise-name">DB Walking Lunges</div><div class="exercise-tags"><span class="tag">4 × 12/leg</span></div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Calf_Raise/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Calf_Raise/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 05</div><div class="exercise-name">Seated Calf Raise</div><div class="exercise-tags"><span class="tag">5 × 15</span></div><div class="exercise-note">Slow + pause</div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plank/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dead_Bug/0.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 06</div><div class="exercise-name">Core: Plank + Dead Bug</div><div class="exercise-tags"><span class="tag">Plank 3 × 60s</span><span class="tag">Dead Bug 3 × 10/side</span></div><div class="exercise-note">No waist thickening exercises</div></div></div>
     </div>
 
     <div class="day-content" id="day5">
       <div class="day-header"><h2 class="day-number">Day 5 — Upper</h2><div class="day-focus">Delt + Arms Focus + HIIT</div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/T-Bar_Row_with_Handle/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/T-Bar_Row_with_Handle/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 01</div><div class="exercise-name">Chest-Supported T-Row</div><div class="exercise-tags"><span class="tag">4 × 10</span></div><div class="exercise-note">No trap pull</div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Wide-Grip_Lat_Pulldown/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Wide-Grip_Lat_Pulldown/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 02</div><div class="exercise-name">Neutral Grip Lat Pulldown</div><div class="exercise-tags"><span class="tag">4 × 10</span></div><div class="exercise-note">No swinging</div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_Dumbbell_Rear_Delt_Raise_With_Head_On_Bench/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_Dumbbell_Rear_Delt_Raise_With_Head_On_Bench/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 03</div><div class="exercise-name">DB Rear Delt Fly (Incline)</div><div class="exercise-tags"><span class="tag">3 × 15</span></div><div class="exercise-note">Light weight, full squeeze, no upper back</div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Face_Pull/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Face_Pull/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 04</div><div class="exercise-name">Cable Face Pull</div><div class="exercise-tags"><span class="tag">3 × 15</span></div><div class="exercise-note">Wide, high</div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Lateral_Raise/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Lateral_Raise/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 05</div><div class="exercise-name">DB Lateral Raise Dropset</div><div class="exercise-tags"><span class="tag">3 rounds</span></div><div class="exercise-note">No traps</div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/EZ-Bar_Curl/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/EZ-Bar_Curl/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 06</div><div class="exercise-name">EZ Bar Curl</div><div class="exercise-tags"><span class="tag">4 × 12</span></div></div></div>
-      <div class="exercise-card"><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Triceps_Pushdown_-_Rope_Attachment/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Triceps_Pushdown_-_Rope_Attachment/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 07</div><div class="exercise-name">Rope Tricep Pushdown</div><div class="exercise-tags"><span class="tag">4 × 12</span></div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/T-Bar_Row_with_Handle/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/T-Bar_Row_with_Handle/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 01</div><div class="exercise-name">Chest-Supported T-Row</div><div class="exercise-tags"><span class="tag">4 × 10</span></div><div class="exercise-note">No trap pull</div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Wide-Grip_Lat_Pulldown/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Wide-Grip_Lat_Pulldown/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 02</div><div class="exercise-name">Neutral Grip Lat Pulldown</div><div class="exercise-tags"><span class="tag">4 × 10</span></div><div class="exercise-note">No swinging</div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_Dumbbell_Rear_Delt_Raise_With_Head_On_Bench/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_Dumbbell_Rear_Delt_Raise_With_Head_On_Bench/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 03</div><div class="exercise-name">DB Rear Delt Fly (Incline)</div><div class="exercise-tags"><span class="tag">3 × 15</span></div><div class="exercise-note">Light weight, full squeeze, no upper back</div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Face_Pull/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Face_Pull/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 04</div><div class="exercise-name">Cable Face Pull</div><div class="exercise-tags"><span class="tag">3 × 15</span></div><div class="exercise-note">Wide, high</div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Lateral_Raise/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Lateral_Raise/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 05</div><div class="exercise-name">DB Lateral Raise Dropset</div><div class="exercise-tags"><span class="tag">3 rounds</span></div><div class="exercise-note">No traps</div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/EZ-Bar_Curl/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/EZ-Bar_Curl/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 06</div><div class="exercise-name">EZ Bar Curl</div><div class="exercise-tags"><span class="tag">4 × 12</span></div></div></div>
+      <div class="exercise-card"><div class="exercise-check" onclick="toggleExercise(event,this)"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="exercise-visual"><div class="img-pair"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Triceps_Pushdown_-_Rope_Attachment/0.jpg" alt=""><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Triceps_Pushdown_-_Rope_Attachment/1.jpg" alt=""></div></div><div class="exercise-info"><div class="exercise-num">EXERCISE 07</div><div class="exercise-name">Rope Tricep Pushdown</div><div class="exercise-tags"><span class="tag">4 × 12</span></div></div></div>
       <div class="hiit-card"><div class="hiit-label"><svg viewBox="0 0 18 18" fill="none"><path d="M9 2l2 5h5l-4 3.5 1.5 5L9 12.5 4.5 15.5 6 10.5 2 7h5z" stroke="#111111" stroke-width="1.5" stroke-linejoin="round"/></svg>HIIT Finisher</div><div class="hiit-detail">Spin Bike or Sprints — <strong>8 rounds</strong></div><div class="hiit-detail">30s <strong>HIGH</strong> intensity / 30s <strong>NO</strong> resistance</div><div class="hiit-liss">Then: 20 min LISS incline walk</div></div>
     </div>
 
@@ -770,80 +772,115 @@
     <div class="meal-timeline">
 
       <div class="meal-card">
-        <div class="meal-time">~7:00 AM &middot; Wake Up</div>
-        <div class="meal-title">Meal 1 — Breakfast</div>
+        <div class="meal-card-header" onclick="toggleMealCard(this)">
+          <div class="meal-card-check"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="meal-card-info">
+            <div class="meal-time">~7:00 AM &middot; Wake Up</div>
+            <div class="meal-title">Meal 1 — Breakfast</div>
+          </div>
+        </div>
         <div class="meal-items">
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">½ cup cream of rice + almond milk</div></div>
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">1 scoop protein <em>(water, almond milk, or mixed in)</em></div></div>
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">1 tbsp hemp hearts or chia seeds</div></div>
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">2 tbsp natural peanut butter</div></div>
+          <div class="meal-item">½ cup cream of rice + almond milk</div>
+          <div class="meal-item">1 scoop protein <em>(water, almond milk, or mixed in)</em></div>
+          <div class="meal-item">1 tbsp hemp hearts or chia seeds</div>
+          <div class="meal-item">2 tbsp natural peanut butter</div>
         </div>
       </div>
 
       <div class="meal-card">
-        <div class="meal-time">~12:00 PM</div>
-        <div class="meal-title">Meal 2 — Lunch</div>
+        <div class="meal-card-header" onclick="toggleMealCard(this)">
+          <div class="meal-card-check"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="meal-card-info">
+            <div class="meal-time">~12:00 PM</div>
+            <div class="meal-title">Meal 2 — Lunch</div>
+          </div>
+        </div>
         <div class="meal-items">
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">5 oz lean ground turkey or chicken</div></div>
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">½ cup white basmati rice</div></div>
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">Cooked vegetables <em>(carrot, zucchini, eggplant)</em></div></div>
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">1 tbsp olive or avocado oil</div></div>
+          <div class="meal-item">5 oz lean ground turkey or chicken</div>
+          <div class="meal-item">½ cup white basmati rice</div>
+          <div class="meal-item">Cooked vegetables <em>(carrot, zucchini, eggplant)</em></div>
+          <div class="meal-item">1 tbsp olive or avocado oil</div>
         </div>
       </div>
 
       <div class="meal-card pre-workout">
-        <div class="meal-time">~3:30 PM &middot; Pre-Workout</div>
-        <div class="meal-title">Performance Fuel</div>
+        <div class="meal-card-header" onclick="toggleMealCard(this)">
+          <div class="meal-card-check"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="meal-card-info">
+            <div class="meal-time">~3:30 PM &middot; Pre-Workout</div>
+            <div class="meal-title">Performance Fuel</div>
+          </div>
+        </div>
         <div class="meal-items">
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">2 rice cakes</div></div>
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">1 tbsp natural peanut butter</div></div>
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">½ tbsp honey</div></div>
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">Cinnamon</div></div>
+          <div class="meal-item">2 rice cakes</div>
+          <div class="meal-item">1 tbsp natural peanut butter</div>
+          <div class="meal-item">½ tbsp honey</div>
+          <div class="meal-item">Cinnamon</div>
         </div>
       </div>
 
       <div class="meal-section-label">Workout @ 5:00 PM</div>
 
       <div class="meal-card post-workout">
-        <div class="meal-time">~6:15 PM &middot; Post-Workout</div>
-        <div class="meal-title">Recovery</div>
+        <div class="meal-card-header" onclick="toggleMealCard(this)">
+          <div class="meal-card-check"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="meal-card-info">
+            <div class="meal-time">~6:15 PM &middot; Post-Workout</div>
+            <div class="meal-title">Recovery</div>
+          </div>
+        </div>
         <div class="meal-items">
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">1 scoop protein</div></div>
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">1 rice cake</div></div>
+          <div class="meal-item">1 scoop protein</div>
+          <div class="meal-item">1 rice cake</div>
         </div>
       </div>
 
       <div class="meal-card">
-        <div class="meal-time">~7:30 PM</div>
-        <div class="meal-title">Meal 3 — Dinner</div>
+        <div class="meal-card-header" onclick="toggleMealCard(this)">
+          <div class="meal-card-check"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="meal-card-info">
+            <div class="meal-time">~7:30 PM</div>
+            <div class="meal-title">Meal 3 — Dinner</div>
+          </div>
+        </div>
         <div class="meal-items">
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">5 oz white fish, chicken, or turkey <em>(1–2x/wk: salmon or lean beef)</em></div></div>
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">½ cup rice, quinoa, or squash</div></div>
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">1 cup cooked greens or vegetables</div></div>
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">1 tbsp flax or olive oil</div></div>
+          <div class="meal-item">5 oz white fish, chicken, or turkey <em>(1–2x/wk: salmon or lean beef)</em></div>
+          <div class="meal-item">½ cup rice, quinoa, or squash</div>
+          <div class="meal-item">1 cup cooked greens or vegetables</div>
+          <div class="meal-item">1 tbsp flax or olive oil</div>
         </div>
       </div>
 
       <div class="meal-card">
-        <div class="meal-time">~9:00 PM</div>
-        <div class="meal-title">Meal 4 — Evening</div>
+        <div class="meal-card-header" onclick="toggleMealCard(this)">
+          <div class="meal-card-check"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="meal-card-info">
+            <div class="meal-time">~9:00 PM</div>
+            <div class="meal-title">Meal 4 — Evening</div>
+          </div>
+        </div>
         <div class="meal-items">
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">¾ cup coconut or skyr yogurt</div></div>
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">½ scoop protein or collagen</div></div>
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">1 tbsp fruit puree or ½ cup berries <em>(mango or mixed)</em></div></div>
+          <div class="meal-item">¾ cup coconut or skyr yogurt</div>
+          <div class="meal-item">½ scoop protein or collagen</div>
+          <div class="meal-item">1 tbsp fruit puree or ½ cup berries <em>(mango or mixed)</em></div>
         </div>
       </div>
 
       <div class="meal-section-label">Supplements</div>
 
       <div class="supplement-card">
-        <div class="meal-title">Daily — Keep Consistent</div>
+        <div class="meal-card-header" onclick="toggleMealCard(this)">
+          <div class="meal-card-check"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="meal-card-info">
+            <div class="meal-title">Daily — Keep Consistent</div>
+          </div>
+        </div>
         <div class="meal-items">
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">Vitamin D3</div></div>
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">B12 / B Complex</div></div>
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">Ashwagandha</div></div>
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">Greens supplement powder</div></div>
-          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">PM: GABA + ZMA</div></div>
+          <div class="meal-item">Vitamin D3</div>
+          <div class="meal-item">B12 / B Complex</div>
+          <div class="meal-item">Ashwagandha</div>
+          <div class="meal-item">Greens supplement powder</div>
+          <div class="meal-item">PM: GABA + ZMA</div>
         </div>
       </div>
 
@@ -863,63 +900,63 @@
 
       <div class="grocery-category">
         <div class="grocery-cat-title">Protein</div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Lean ground turkey or chicken breast</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">White fish <em style="color:var(--text-dim);font-style:normal;font-size:12px">(tilapia, cod, or sole)</em></div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Salmon <em style="color:var(--text-dim);font-style:normal;font-size:12px">(1–2x/wk)</em></div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Protein powder <em style="color:var(--text-dim);font-style:normal;font-size:12px">(whey or plant)</em></div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Collagen powder</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Lean ground turkey or chicken breast<span class="grocery-meal-tag">Meal 2, 3</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">White fish <em style="color:var(--text-dim);font-style:normal;font-size:12px">(tilapia, cod, or sole)</em><span class="grocery-meal-tag">Meal 3</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Salmon <em style="color:var(--text-dim);font-style:normal;font-size:12px">(1–2x/wk)</em><span class="grocery-meal-tag">Meal 3</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Protein powder <em style="color:var(--text-dim);font-style:normal;font-size:12px">(whey or plant)</em><span class="grocery-meal-tag">Meal 1, Post</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Collagen powder<span class="grocery-meal-tag">Meal 4</span></div></div>
       </div>
 
       <div class="grocery-category">
         <div class="grocery-cat-title">Carbs &amp; Grains</div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Cream of rice</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">White basmati rice or quinoa</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Rice cakes</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Cream of rice<span class="grocery-meal-tag">Meal 1</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">White basmati rice or quinoa<span class="grocery-meal-tag">Meal 2, 3</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Rice cakes<span class="grocery-meal-tag">Pre, Post</span></div></div>
       </div>
 
       <div class="grocery-category">
         <div class="grocery-cat-title">Vegetables &amp; Greens</div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Carrots</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Zucchini</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Eggplant</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Cooking greens (spinach, kale, or chard)</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Squash</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Carrots<span class="grocery-meal-tag">Meal 2</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Zucchini<span class="grocery-meal-tag">Meal 2</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Eggplant<span class="grocery-meal-tag">Meal 2</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Cooking greens (spinach, kale, or chard)<span class="grocery-meal-tag">Meal 3</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Squash<span class="grocery-meal-tag">Meal 3</span></div></div>
       </div>
 
       <div class="grocery-category">
         <div class="grocery-cat-title">Fruits</div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Berries <em style="color:var(--text-dim);font-style:normal;font-size:12px">(mixed or blueberries)</em></div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Fruit puree <em style="color:var(--text-dim);font-style:normal;font-size:12px">(unsweetened mango or berry — pick one)</em></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Berries <em style="color:var(--text-dim);font-style:normal;font-size:12px">(mixed or blueberries)</em><span class="grocery-meal-tag">Meal 4</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Fruit puree <em style="color:var(--text-dim);font-style:normal;font-size:12px">(unsweetened mango or berry — pick one)</em><span class="grocery-meal-tag">Meal 4</span></div></div>
       </div>
 
       <div class="grocery-category">
         <div class="grocery-cat-title">Fats &amp; Oils</div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Natural peanut butter</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Olive oil or avocado oil</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Flax oil or ground flaxseed</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Hemp hearts or chia seeds</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Natural peanut butter<span class="grocery-meal-tag">Meal 1, Pre</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Olive oil or avocado oil<span class="grocery-meal-tag">Meal 2</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Flax oil or ground flaxseed<span class="grocery-meal-tag">Meal 3</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Hemp hearts or chia seeds<span class="grocery-meal-tag">Meal 1</span></div></div>
       </div>
 
       <div class="grocery-category">
         <div class="grocery-cat-title">Dairy &amp; Alternatives</div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Unsweetened almond milk</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Coconut yogurt or skyr</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Unsweetened almond milk<span class="grocery-meal-tag">Meal 1</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Coconut yogurt or skyr<span class="grocery-meal-tag">Meal 4</span></div></div>
       </div>
 
       <div class="grocery-category">
         <div class="grocery-cat-title">Pantry &amp; Extras</div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Honey</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Cinnamon</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Honey<span class="grocery-meal-tag">Pre</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Cinnamon<span class="grocery-meal-tag">Pre</span></div></div>
       </div>
 
       <div class="grocery-category">
         <div class="grocery-cat-title">Supplements</div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Vitamin D3</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">B12 / B Complex</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Ashwagandha</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Greens supplement powder</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">GABA</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">ZMA</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Vitamin D3<span class="grocery-meal-tag">Supps</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">B12 / B Complex<span class="grocery-meal-tag">Supps</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Ashwagandha<span class="grocery-meal-tag">Supps</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Greens supplement powder<span class="grocery-meal-tag">Supps</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">GABA<span class="grocery-meal-tag">Supps</span></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">ZMA<span class="grocery-meal-tag">Supps</span></div></div>
       </div>
 
       <button class="grocery-clear-btn" onclick="clearGrocery()">Reset checklist</button>
@@ -1058,18 +1095,19 @@
 
   // ─── MEAL CHECKLIST (daily auto-reset) ───
   function getTodayKey() { return new Date().toISOString().slice(0, 10); }
+  function getMealCards() { return document.querySelectorAll('.meal-card, .supplement-card'); }
   function mealDailyReset() {
     const lastDate = localStorage.getItem('voz-meal-date');
     const today = getTodayKey();
     if (lastDate !== today) {
       localStorage.setItem('voz-meal-date', today);
       localStorage.removeItem('voz-meal-checked');
-      document.querySelectorAll('.meal-item.checked').forEach(el => el.classList.remove('checked'));
+      getMealCards().forEach(el => el.classList.remove('checked'));
     }
   }
   function saveMealState() {
     const indices = [];
-    document.querySelectorAll('.meal-item').forEach((el, i) => { if (el.classList.contains('checked')) indices.push(i); });
+    getMealCards().forEach((el, i) => { if (el.classList.contains('checked')) indices.push(i); });
     localStorage.setItem('voz-meal-checked', JSON.stringify(indices));
     localStorage.setItem('voz-meal-date', getTodayKey());
   }
@@ -1077,24 +1115,58 @@
     mealDailyReset();
     try {
       const indices = JSON.parse(localStorage.getItem('voz-meal-checked') || '[]');
-      const items = document.querySelectorAll('.meal-item');
-      indices.forEach(i => { if (items[i]) items[i].classList.add('checked'); });
+      const cards = getMealCards();
+      indices.forEach(i => { if (cards[i]) cards[i].classList.add('checked'); });
     } catch(e) {}
   }
   function updateMealProgress() {
-    const all = document.querySelectorAll('.meal-item');
-    const checked = document.querySelectorAll('.meal-item.checked');
-    const pct = all.length ? (checked.length / all.length * 100) : 0;
+    const all = getMealCards();
+    let checked = 0;
+    all.forEach(c => { if (c.classList.contains('checked')) checked++; });
+    const pct = all.length ? (checked / all.length * 100) : 0;
     document.getElementById('mealFill').style.width = pct + '%';
-    document.getElementById('mealCount').textContent = checked.length + ' / ' + all.length;
+    document.getElementById('mealCount').textContent = checked + ' / ' + all.length;
   }
-  function toggleMeal(el) {
-    el.classList.toggle('checked');
+  function toggleMealCard(header) {
+    const card = header.closest('.meal-card, .supplement-card');
+    card.classList.toggle('checked');
     saveMealState();
     updateMealProgress();
   }
   loadMealState();
   updateMealProgress();
+  // --- EXERCISE CHECKLIST (daily auto-reset) ---
+  function getExCards() { return document.querySelectorAll('.exercise-card'); }
+  function exDailyReset() {
+    var lastDate = localStorage.getItem('voz-ex-date');
+    var today = getTodayKey();
+    if (lastDate !== today) {
+      localStorage.setItem('voz-ex-date', today);
+      localStorage.removeItem('voz-ex-checked');
+      getExCards().forEach(function(el) { el.classList.remove('ex-done'); });
+    }
+  }
+  function saveExState() {
+    var indices = [];
+    getExCards().forEach(function(el, i) { if (el.classList.contains('ex-done')) indices.push(i); });
+    localStorage.setItem('voz-ex-checked', JSON.stringify(indices));
+    localStorage.setItem('voz-ex-date', getTodayKey());
+  }
+  function loadExState() {
+    exDailyReset();
+    try {
+      var indices = JSON.parse(localStorage.getItem('voz-ex-checked') || '[]');
+      var cards = getExCards();
+      indices.forEach(function(i) { if (cards[i]) cards[i].classList.add('ex-done'); });
+    } catch(e) {}
+  }
+  function toggleExercise(evt, el) {
+    evt.stopPropagation();
+    var card = el.closest('.exercise-card');
+    card.classList.toggle('ex-done');
+    saveExState();
+  }
+  loadExState();
 
   // ─── GROCERY CHECKLIST ───
   function updateGroceryProgress() {
