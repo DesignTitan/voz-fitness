@@ -360,23 +360,89 @@
   .meal-item {
     font-size: 13.5px;
     color: var(--text);
-    padding-left: 16px;
+    padding: 8px 10px;
     position: relative;
     line-height: 1.45;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background .15s, opacity .2s;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
   }
 
-  .meal-item::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 7px;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #e0e0e0;
+  .meal-item:active { background: var(--surface-hover); }
+
+  .meal-item.checked {
+    opacity: 0.45;
   }
 
+  .meal-item.checked .meal-item-text {
+    text-decoration: line-through;
+    text-decoration-color: var(--text-dim);
+  }
+
+  .meal-checkbox {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .2s;
+    background: transparent;
+  }
+
+  .meal-item.checked .meal-checkbox {
+    background: var(--meal-blue);
+    border-color: var(--meal-blue);
+  }
+
+  .meal-checkbox svg { width: 14px; height: 14px; opacity: 0; transition: opacity .2s; }
+  .meal-item.checked .meal-checkbox svg { opacity: 1; }
+
+  .meal-item-text { flex: 1; }
   .meal-item em { color: var(--text-dim); font-style: normal; font-size: 12px; }
+
+  .meal-progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 16px 14px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .meal-progress-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--tag-bg);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .meal-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--meal-blue);
+    border-radius: 3px;
+    transition: width .35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .meal-progress-text {
+    font-family: 'Jost', sans-serif; font-weight: 700;
+    font-size: 13px;
+    color: var(--meal-blue);
+    white-space: nowrap;
+    min-width: 44px;
+    text-align: right;
+  }
 
   .meal-section-label {
     font-family: 'Jost', sans-serif; font-weight: 700;
@@ -397,7 +463,6 @@
   }
 
   .supplement-card .meal-title { font-size: 14px; margin-bottom: 8px; }
-  .supplement-card .meal-item::before { background: var(--accent); }
 
   .hydration-banner {
     display: flex;
@@ -697,16 +762,21 @@
       2.5L water daily &middot; Salt food for performance + pumps
     </div>
 
+    <div class="meal-progress">
+      <div class="meal-progress-bar"><div class="meal-progress-fill" id="mealFill"></div></div>
+      <div class="meal-progress-text" id="mealCount">0 / 0</div>
+    </div>
+
     <div class="meal-timeline">
 
       <div class="meal-card">
         <div class="meal-time">~7:00 AM &middot; Wake Up</div>
         <div class="meal-title">Meal 1 — Breakfast</div>
         <div class="meal-items">
-          <div class="meal-item">½ cup cream of rice + almond milk</div>
-          <div class="meal-item">1 scoop protein <em>(water, almond milk, or mixed in)</em></div>
-          <div class="meal-item">1 tbsp hemp hearts or chia seeds</div>
-          <div class="meal-item">2 tbsp natural peanut butter</div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">½ cup cream of rice + almond milk</div></div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">1 scoop protein <em>(water, almond milk, or mixed in)</em></div></div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">1 tbsp hemp hearts or chia seeds</div></div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">2 tbsp natural peanut butter</div></div>
         </div>
       </div>
 
@@ -714,10 +784,10 @@
         <div class="meal-time">~12:00 PM</div>
         <div class="meal-title">Meal 2 — Lunch</div>
         <div class="meal-items">
-          <div class="meal-item">5 oz lean ground turkey or chicken</div>
-          <div class="meal-item">½ cup white basmati rice</div>
-          <div class="meal-item">Cooked vegetables <em>(carrot, zucchini, eggplant)</em></div>
-          <div class="meal-item">1 tbsp olive or avocado oil</div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">5 oz lean ground turkey or chicken</div></div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">½ cup white basmati rice</div></div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">Cooked vegetables <em>(carrot, zucchini, eggplant)</em></div></div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">1 tbsp olive or avocado oil</div></div>
         </div>
       </div>
 
@@ -725,10 +795,10 @@
         <div class="meal-time">~3:30 PM &middot; Pre-Workout</div>
         <div class="meal-title">Performance Fuel</div>
         <div class="meal-items">
-          <div class="meal-item">2 rice cakes</div>
-          <div class="meal-item">1 tbsp natural peanut butter</div>
-          <div class="meal-item">½ tbsp honey</div>
-          <div class="meal-item">Cinnamon</div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">2 rice cakes</div></div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">1 tbsp natural peanut butter</div></div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">½ tbsp honey</div></div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">Cinnamon</div></div>
         </div>
       </div>
 
@@ -738,8 +808,8 @@
         <div class="meal-time">~6:15 PM &middot; Post-Workout</div>
         <div class="meal-title">Recovery</div>
         <div class="meal-items">
-          <div class="meal-item">1 scoop protein</div>
-          <div class="meal-item">1 rice cake</div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">1 scoop protein</div></div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">1 rice cake</div></div>
         </div>
       </div>
 
@@ -747,10 +817,10 @@
         <div class="meal-time">~7:30 PM</div>
         <div class="meal-title">Meal 3 — Dinner</div>
         <div class="meal-items">
-          <div class="meal-item">5 oz white fish, chicken, or turkey <em>(1–2x/wk: salmon or lean beef)</em></div>
-          <div class="meal-item">½ cup rice, quinoa, or squash</div>
-          <div class="meal-item">1 cup cooked greens or vegetables</div>
-          <div class="meal-item">1 tbsp flax or olive oil</div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">5 oz white fish, chicken, or turkey <em>(1–2x/wk: salmon or lean beef)</em></div></div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">½ cup rice, quinoa, or squash</div></div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">1 cup cooked greens or vegetables</div></div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">1 tbsp flax or olive oil</div></div>
         </div>
       </div>
 
@@ -758,9 +828,9 @@
         <div class="meal-time">~9:00 PM</div>
         <div class="meal-title">Meal 4 — Evening</div>
         <div class="meal-items">
-          <div class="meal-item">¾ cup coconut or skyr yogurt</div>
-          <div class="meal-item">½ scoop protein or collagen</div>
-          <div class="meal-item">1 tbsp fruit puree or ½ cup berries <em>(mango or mixed)</em></div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">¾ cup coconut or skyr yogurt</div></div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">½ scoop protein or collagen</div></div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">1 tbsp fruit puree or ½ cup berries <em>(mango or mixed)</em></div></div>
         </div>
       </div>
 
@@ -769,11 +839,11 @@
       <div class="supplement-card">
         <div class="meal-title">Daily — Keep Consistent</div>
         <div class="meal-items">
-          <div class="meal-item">Vitamin D3</div>
-          <div class="meal-item">B12 / B Complex</div>
-          <div class="meal-item">Ashwagandha</div>
-          <div class="meal-item">Greens supplement powder</div>
-          <div class="meal-item">PM: GABA + ZMA</div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">Vitamin D3</div></div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">B12 / B Complex</div></div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">Ashwagandha</div></div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">Greens supplement powder</div></div>
+          <div class="meal-item" onclick="toggleMeal(this)"><div class="meal-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="meal-item-text">PM: GABA + ZMA</div></div>
         </div>
       </div>
 
@@ -793,19 +863,17 @@
 
       <div class="grocery-category">
         <div class="grocery-cat-title">Protein</div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Lean ground turkey</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Chicken breast</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">White fish (tilapia, cod, or sole)</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Lean ground turkey or chicken breast</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">White fish <em style="color:var(--text-dim);font-style:normal;font-size:12px">(tilapia, cod, or sole)</em></div></div>
         <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Salmon <em style="color:var(--text-dim);font-style:normal;font-size:12px">(1–2x/wk)</em></div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Protein powder (whey or plant)</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Protein powder <em style="color:var(--text-dim);font-style:normal;font-size:12px">(whey or plant)</em></div></div>
         <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Collagen powder</div></div>
       </div>
 
       <div class="grocery-category">
         <div class="grocery-cat-title">Carbs &amp; Grains</div>
         <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Cream of rice</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">White basmati rice</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Quinoa</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">White basmati rice or quinoa</div></div>
         <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Rice cakes</div></div>
       </div>
 
@@ -820,18 +888,16 @@
 
       <div class="grocery-category">
         <div class="grocery-cat-title">Fruits</div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Berries (mixed or blueberries)</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Fruit puree (unsweetened mango or berry)</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Berries <em style="color:var(--text-dim);font-style:normal;font-size:12px">(mixed or blueberries)</em></div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Fruit puree <em style="color:var(--text-dim);font-style:normal;font-size:12px">(unsweetened mango or berry — pick one)</em></div></div>
       </div>
 
       <div class="grocery-category">
         <div class="grocery-cat-title">Fats &amp; Oils</div>
         <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Natural peanut butter</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Olive oil</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Avocado oil</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Olive oil or avocado oil</div></div>
         <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Flax oil or ground flaxseed</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Hemp hearts</div></div>
-        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Chia seeds</div></div>
+        <div class="grocery-item" onclick="toggleGrocery(this)"><div class="grocery-checkbox"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="grocery-item-text">Hemp hearts or chia seeds</div></div>
       </div>
 
       <div class="grocery-category">
@@ -989,6 +1055,46 @@
   sheet.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, { passive: true });
   sheet.addEventListener('touchend', e => { if (e.changedTouches[0].clientY - touchStartY > 80) closeModal(); }, { passive: true });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // ─── MEAL CHECKLIST (daily auto-reset) ───
+  function getTodayKey() { return new Date().toISOString().slice(0, 10); }
+  function mealDailyReset() {
+    const lastDate = localStorage.getItem('voz-meal-date');
+    const today = getTodayKey();
+    if (lastDate !== today) {
+      localStorage.setItem('voz-meal-date', today);
+      localStorage.removeItem('voz-meal-checked');
+      document.querySelectorAll('.meal-item.checked').forEach(el => el.classList.remove('checked'));
+    }
+  }
+  function saveMealState() {
+    const indices = [];
+    document.querySelectorAll('.meal-item').forEach((el, i) => { if (el.classList.contains('checked')) indices.push(i); });
+    localStorage.setItem('voz-meal-checked', JSON.stringify(indices));
+    localStorage.setItem('voz-meal-date', getTodayKey());
+  }
+  function loadMealState() {
+    mealDailyReset();
+    try {
+      const indices = JSON.parse(localStorage.getItem('voz-meal-checked') || '[]');
+      const items = document.querySelectorAll('.meal-item');
+      indices.forEach(i => { if (items[i]) items[i].classList.add('checked'); });
+    } catch(e) {}
+  }
+  function updateMealProgress() {
+    const all = document.querySelectorAll('.meal-item');
+    const checked = document.querySelectorAll('.meal-item.checked');
+    const pct = all.length ? (checked.length / all.length * 100) : 0;
+    document.getElementById('mealFill').style.width = pct + '%';
+    document.getElementById('mealCount').textContent = checked.length + ' / ' + all.length;
+  }
+  function toggleMeal(el) {
+    el.classList.toggle('checked');
+    saveMealState();
+    updateMealProgress();
+  }
+  loadMealState();
+  updateMealProgress();
 
   // ─── GROCERY CHECKLIST ───
   function updateGroceryProgress() {
