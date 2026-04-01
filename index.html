@@ -1202,22 +1202,48 @@
   }
   loadExState();
 
-  // ─── GROCERY CHECKLIST ───
+  // ─── GROCERY CHECKLIST (daily auto-reset) ───
+  function groceryDailyReset() {
+    var lastDate = localStorage.getItem('voz-grocery-date');
+    var today = getTodayKey();
+    if (lastDate !== today) {
+      localStorage.setItem('voz-grocery-date', today);
+      localStorage.removeItem('voz-grocery-checked');
+      document.querySelectorAll('.grocery-item.checked').forEach(function(el) { el.classList.remove('checked'); });
+    }
+  }
+  function saveGroceryState() {
+    var indices = [];
+    document.querySelectorAll('.grocery-item').forEach(function(el, i) { if (el.classList.contains('checked')) indices.push(i); });
+    localStorage.setItem('voz-grocery-checked', JSON.stringify(indices));
+    localStorage.setItem('voz-grocery-date', getTodayKey());
+  }
+  function loadGroceryState() {
+    groceryDailyReset();
+    try {
+      var indices = JSON.parse(localStorage.getItem('voz-grocery-checked') || '[]');
+      var items = document.querySelectorAll('.grocery-item');
+      indices.forEach(function(i) { if (items[i]) items[i].classList.add('checked'); });
+    } catch(e) {}
+  }
   function updateGroceryProgress() {
-    const all = document.querySelectorAll('.grocery-item');
-    const checked = document.querySelectorAll('.grocery-item.checked');
-    const pct = all.length ? (checked.length / all.length * 100) : 0;
+    var all = document.querySelectorAll('.grocery-item');
+    var checked = document.querySelectorAll('.grocery-item.checked');
+    var pct = all.length ? (checked.length / all.length * 100) : 0;
     document.getElementById('groceryFill').style.width = pct + '%';
     document.getElementById('groceryCount').textContent = checked.length + ' / ' + all.length;
   }
   function toggleGrocery(el) {
     el.classList.toggle('checked');
+    saveGroceryState();
     updateGroceryProgress();
   }
   function clearGrocery() {
-    document.querySelectorAll('.grocery-item.checked').forEach(el => el.classList.remove('checked'));
+    document.querySelectorAll('.grocery-item.checked').forEach(function(el) { el.classList.remove('checked'); });
+    saveGroceryState();
     updateGroceryProgress();
   }
+  loadGroceryState();
   updateGroceryProgress();
 
   // ─── PUSH NOTIFICATIONS ───
